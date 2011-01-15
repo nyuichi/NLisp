@@ -3,7 +3,8 @@ import re
 import traceback
 import sys
 
-nil = type('Nil', (), {'__str__': lambda self: '()'})()
+nil = type('Nil', (), {'__str__': lambda self: '()',
+                       '__iter__': lambda self: iter([])})()
 undef = type('Undef', (), {'__str__': lambda self: '#<undef>'})()
 f = type('F', (), {'__str__': lambda self: '#f'})()
 t = type('T', (), {'__str__': lambda self: '#t'})()
@@ -34,6 +35,13 @@ class Cell:
             return self.car == x.car and self.cdr == x.cdr
         else:
             return False
+
+    def __iter__(self):
+        elem = self
+        while elem is not nil:
+            yield elem.car
+            elem = elem.cdr
+        
     
 class Symbol:
 
