@@ -18,6 +18,7 @@ class Token(object):
     REAL             = 12
     COMPLEX          = 13
     SYMBOL           = 14
+    BOOLEAN          = 15
 
     TERMINAL = whitespace+"(),'"
     
@@ -27,6 +28,8 @@ class Token(object):
 
 
 class Lexer:
+    '''Do lexical analyzation for scheme source code'''
+
     def __init__(self, exp):
         self.exp = list(exp)
 
@@ -52,6 +55,8 @@ class Lexer:
             return self.tokenize_comma()
         elif ch == '"':
             return self.tokenize_string()
+        elif ch == '#':
+            return self.tokenize_sharp()
         else:
             return self.tokenize_atom(ch)
 
@@ -65,7 +70,7 @@ class Lexer:
     def tokenize_comma(self):
         ch = self.exp[0]
         if ch == '@':
-            self.exp.pop(0)  # Drop '@'
+            self.exp.pop(0)
             return Token(Token.UNQUOTE_SPLICING)
         else:
             return Token(Token.UNQUOTE)
@@ -80,6 +85,13 @@ class Lexer:
                 ch = self.exp.pop(0)
             s += ch
         return Token(Token.STRING, s)
+
+    def tokenize_sharp(self):
+        ch = self.exp.pop(0)
+        if ch == 't':
+            return Token(Token.BOOLEAN, t)
+        elif ch == 'f':
+            return Token(Token.BOOLEAN, f)
 
     def tokenize_atom(self, ch):
         atom = ch+self.read_atom()
