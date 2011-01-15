@@ -51,16 +51,13 @@ def evals(x, env):
             return proc.proc(x.cdr, env)
 
         elif isa(proc, Primitive):
-            args, elem = [], x.cdr
-            while not elem == nil:
-                args.append(evals(elem.car, env))
-                elem = elem.cdr
+            args = list(evalall(x.cdr, env))
             return proc.proc(*args)
 
         elif isa(proc, Closure):
-            # Evaluate parameters
             new_scope = Env(proc.env)
-            arguments = evalall(x.cdr, new_scope)
+            # Evaluate parameters
+            arguments = evalall(x.cdr, env)
             # Bind
             bind(proc.pars, arguments, new_scope)
             # Evaluate a closure

@@ -164,7 +164,7 @@ def add_standard_functions(env):
                   (cons (car args) (filter f (cdr args)))
                   (filter f (cdr args)))))
         
-        (define-macro (let2 let-args . let-body)
+        (define-macro (let let-args . let-body)
           `((lambda ,(map car let-args) ,@let-body) ,@(map cadr let-args)))
         '''
 
