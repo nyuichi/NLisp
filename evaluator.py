@@ -38,16 +38,16 @@ def evals(x, env):
     if x is eof:
         return
 
+    elif isconstant(x):
+        return x
+
     elif issymbol(x):
         return env.find(x)
 
     elif islist(x):
         proc = evals(x.car, env)
 
-        if isconstant(proc):
-            return proc
-
-        elif isa(proc, Syntax):
+        if isa(proc, Syntax):
             return proc.proc(x.cdr, env)
 
         elif isa(proc, Primitive):
@@ -75,5 +75,3 @@ def evals(x, env):
         else:
             raise Exception('Not callable: {0},{1}'.format(type(x.car), x.car))
 
-    elif isconstant(x):
-        return x
